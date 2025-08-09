@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
   webpack: (config) => {
     // This ensures that our path aliases in tsconfig.json work
     config.resolve.alias = {
