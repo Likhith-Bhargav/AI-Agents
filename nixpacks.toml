@@ -12,7 +12,9 @@ cmds = [
 [phases.build]
 cmds = [
     # Skip collectstatic as we're using DISABLE_COLLECTSTATIC
-    "echo 'Skipping collectstatic due to DISABLE_COLLECTSTATIC=1'"
+    "echo 'Skipping collectstatic due to DISABLE_COLLECTSTATIC=1'",
+    # Run database migrations
+    "cd /app/backend && /app/venv/bin/python manage.py migrate --no-input"
 ]
 
 [start]
