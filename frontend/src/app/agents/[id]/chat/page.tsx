@@ -12,6 +12,7 @@ import { CreateTicketFromChat } from '@/features/tickets/components/CreateTicket
 import { Input } from '@/components/ui/Input';
 import EmptyState from '@/components/ui/EmptyState';
 import { cn } from '@/lib/utils';
+import type { WidgetConfig, WidgetPosition } from '@/types/agent';
 
 export default function AgentChatPage() {
   const { id } = useParams<{ id: string }>();
@@ -63,35 +64,125 @@ export default function AgentChatPage() {
         
         console.log('Setting agent data:', agentData);
         
-        // Create a properly typed agent object with defaults
+        // Extract the agent data from the response
+        // The response could be either the agent object directly or in a data property
+        const agentResponseData = 'data' in agentData ? agentData.data : agentData;
+        
+        // Create a properly typed agent object with defaults that matches the Agent type
         const agent: Agent = {
-          id: (agentData as any).id || (agentData as any)._id || id,
-          name: (agentData as any).name || 'Unnamed Agent',
-          description: (agentData as any).description || '',
-          welcome_message: (agentData as any).welcome_message || 'Hello! How can I help you today?',
-          is_active: (agentData as any).is_active !== undefined ? (agentData as any).is_active : true,
-          model: (agentData as any).model || 'gpt-3.5-turbo',
-          temperature: (agentData as any).temperature || 0.7,
-          max_tokens: (agentData as any).max_tokens || 1000,
-          prompt: (agentData as any).prompt || '',
-          status: (agentData as any).status || 'active',
-          created_at: (agentData as any).created_at || new Date().toISOString(),
-          updated_at: (agentData as any).updated_at || new Date().toISOString(),
-          user: (agentData as any).user || {
+          // Required fields with defaults
+          id: (agentResponseData as { id?: string }).id || (agentResponseData as { _id?: string })._id || id,
+          name: (agentResponseData as { name?: string }).name || 'Unnamed Agent',
+          description: (agentResponseData as { description?: string }).description || '',
+          isActive: (agentResponseData as { isActive?: boolean; is_active?: boolean }).isActive ?? 
+                   (agentResponseData as { isActive?: boolean; is_active?: boolean }).is_active ?? true,
+          model: (agentResponseData as { model?: string }).model || 'gpt-3.5-turbo',
+          temperature: (agentResponseData as { temperature?: number }).temperature || 0.7,
+          maxTokens: (agentResponseData as { maxTokens?: number; max_tokens?: number }).maxTokens ||
+                    (agentResponseData as { maxTokens?: number; max_tokens?: number }).max_tokens || 1000,
+          
+          // Map welcome_message to welcomeMessage
+          welcomeMessage: (agentResponseData as { welcomeMessage?: string; welcome_message?: string }).welcomeMessage ||
+                         (agentResponseData as { welcomeMessage?: string; welcome_message?: string }).welcome_message ||
+                         'Hello! How can I help you today?',
+          
+          // Map system_prompt to prompt if available
+          prompt: (agentResponseData as { prompt?: string }).prompt || 
+                 (agentResponseData as { systemPrompt?: string; system_prompt?: string }).systemPrompt ||
+                 (agentResponseData as { systemPrompt?: string; system_prompt?: string }).system_prompt || '',
+          
+          // Timestamps with snake_case for compatibility
+          createdAt: (agentResponseData as { createdAt?: string; created_at?: string }).createdAt ||
+                    (agentResponseData as { createdAt?: string; created_at?: string }).created_at || new Date().toISOString(),
+          updatedAt: (agentResponseData as { updatedAt?: string; updated_at?: string }).updatedAt ||
+                    (agentResponseData as { updatedAt?: string; updated_at?: string }).updated_at || new Date().toISOString(),
+          
+          // Add snake_case timestamps for compatibility
+          created_at: (agentResponseData as { createdAt?: string; created_at?: string }).created_at ||
+                     (agentResponseData as { createdAt?: string; created_at?: string }).createdAt || new Date().toISOString(),
+          updated_at: (agentResponseData as { updatedAt?: string; updated_at?: string }).updated_at ||
+                     (agentResponseData as { updatedAt?: string; updated_at?: string }).updatedAt || new Date().toISOString(),
+          
+          // Map widget_config to widgetConfig with proper typing
+          widgetConfig: (() => {
+            const wc = (agentResponseData as { widgetConfig?: WidgetConfig; widget_config?: any }).widgetConfig ||
+                      (agentResponseData as { widgetConfig?: WidgetConfig; widget_config?: any }).widget_config;
+            if (!wc) {
+              return {
+                position: 'right', // Changed from 'bottom-right' to match WidgetPosition type
+                primaryColor: '#2563eb',
+                title: 'Chat with us',
+                subtitle: 'We\'re here to help',
+                greeting: 'Hello! How can we help you today?',
+                showBranding: true
+              };
+            }
+            return {
+              position: (wc.position || 'bottom-right') as WidgetPosition,
+              primaryColor: wc.primaryColor || wc.primary_color || '#2563eb',
+              title: wc.title || 'Chat with us',
+              subtitle: wc.subtitle || 'We\'re here to help',
+              greeting: wc.greeting || wc.greeting_message || 'Hello! How can we help you today?',
+              showBranding: wc.showBranding !== false && wc.show_branding !== false,
+              autoOpen: wc.autoOpen || wc.auto_open,
+              showOnMobile: wc.showOnMobile || wc.show_on_mobile,
+              collectEmail: wc.collectEmail || wc.collect_email,
+              icon: wc.icon,
+              hideWhenOffline: wc.hideWhenOffline || wc.hide_when_offline
+            } as WidgetConfig;
+          })(),
+          
+          // Add snake_case widget_config for compatibility
+          widget_config: (() => {
+            const wc = (agentResponseData as { widgetConfig?: any; widget_config?: any }).widget_config ||
+                      (agentResponseData as { widgetConfig?: any; widget_config?: any }).widgetConfig;
+            if (!wc) {
+              return {
+                position: 'right', // Changed from 'bottom-right' to match WidgetPosition type
+                primary_color: '#2563eb',
+                title: 'Chat with us',
+                subtitle: 'We\'re here to help',
+                greeting_message: 'Hello! How can we help you today?',
+                show_branding: true
+              };
+            }
+            return {
+              position: wc.position || 'bottom-right',
+              primary_color: wc.primary_color || wc.primaryColor || '#2563eb',
+              title: wc.title || 'Chat with us',
+              subtitle: wc.subtitle || 'We\'re here to help',
+              greeting_message: wc.greeting_message || wc.greeting || 'Hello! How can we help you today?',
+              show_branding: wc.show_branding !== false && wc.showBranding !== false,
+              auto_open: wc.auto_open || wc.autoOpen,
+              show_on_mobile: wc.show_on_mobile || wc.showOnMobile,
+              collect_email: wc.collect_email || wc.collectEmail,
+              icon: wc.icon,
+              hide_when_offline: wc.hide_when_offline || wc.hideWhenOffline
+            };
+          })(),
+          
+          // Add required user field with default values
+          user: (agentResponseData as { user?: any }).user || {
             id: 'system',
             first_name: 'System',
             last_name: 'User',
-            email: 'system@example.com'
+            email: 'system@example.com',
+            role: 'ADMIN',
+            is_staff: true,
+            is_superuser: true,
+            date_joined: new Date().toISOString(),
+            last_login: new Date().toISOString()
           },
-          widget_config: (agentData as any).widget_config || {
-            primary_color: '#2563eb',
-            font_family: 'Inter',
-            position: 'bottom-right',
-            greeting_message: 'How can I help you today?',
-            show_branding: true
-          },
-          // Add any other required fields with defaults
-          ...(agentData as object)
+          
+          // Add other required fields with defaults
+          status: 'ONLINE',
+          welcome_message: (agentResponseData as { welcomeMessage?: string; welcome_message?: string }).welcome_message ||
+                         (agentResponseData as { welcomeMessage?: string; welcome_message?: string }).welcomeMessage ||
+                         'Hello! How can I help you today?',
+          max_tokens: (agentResponseData as { maxTokens?: number; max_tokens?: number }).max_tokens ||
+                     (agentResponseData as { maxTokens?: number; max_tokens?: number }).maxTokens || 1000,
+          is_active: (agentResponseData as { isActive?: boolean; is_active?: boolean }).is_active ?? 
+                    (agentResponseData as { isActive?: boolean; is_active?: boolean }).isActive ?? true
         };
         
         setAgent(agent);
