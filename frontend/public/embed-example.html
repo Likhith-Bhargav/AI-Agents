@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Embeddable Chat Widget Example</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        header {
+            background: #2563eb;
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        .example {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        pre {
+            background: #1e293b;
+            color: #f8fafc;
+            padding: 1rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 0.9rem;
+        }
+        code {
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .feature {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        .feature h3 {
+            color: #2563eb;
+            margin-top: 0;
+        }
+        .cta {
+            text-align: center;
+            margin: 3rem 0;
+            padding: 2rem;
+            background: #f0f9ff;
+            border-radius: 8px;
+        }
+        .btn {
+            display: inline-block;
+            background: #2563eb;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        .btn:hover {
+            background: #1d4ed8;
+        }
+        footer {
+            text-align: center;
+            margin-top: 4rem;
+            padding: 2rem 0;
+            border-top: 1px solid #e2e8f0;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Embeddable Chat Widget</h1>
+            <p>Add AI-powered chat to any website with just a few lines of code</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="cta">
+            <h2>Get Started in Seconds</h2>
+            <p>Copy and paste this code into your website to add the chat widget</p>
+            <div class="example">
+                <pre><code>&lt;!-- Add this to your website's &lt;head&gt; section -->
+&lt;script src="https://your-domain.com/widget.js" 
+        data-agent-id="YOUR_AGENT_ID"
+        data-position="bottom-right"
+        data-color="#2563eb"
+        data-title="Chat with us"
+        data-subtitle="We're here to help!"
+        data-greeting="Hello! How can I help you today?"
+        data-branding="true"&gt;
+&lt;/script&gt;</code></pre>
+            </div>
+            <a href="#" class="btn">Get Your Agent ID</a>
+        </div>
+
+        <h2>Features</h2>
+        <div class="features">
+            <div class="feature">
+                <h3>Easy to Install</h3>
+                <p>Just add a single line of code to your website to get started. No technical skills required.</p>
+            </div>
+            <div class="feature">
+                <h3>Fully Customizable</h3>
+                <p>Match the widget's colors, position, and messages to your brand's look and feel.</p>
+            </div>
+            <div class="feature">
+                <h3>AI-Powered</h3>
+                <p>Powered by advanced AI to provide instant, helpful responses to your customers.</p>
+            </div>
+        </div>
+
+        <div class="content">
+            <div>
+                <h2>Advanced Configuration</h2>
+                <p>For more control, you can initialize the widget programmatically:</p>
+                <div class="example">
+                    <pre><code>&lt;script src="https://your-domain.com/widget.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+    // Initialize with custom options
+    const widget = new SupportWidget({
+        agentId: 'YOUR_AGENT_ID',
+        position: 'bottom-right', // or 'top-right', 'bottom-left', 'top-left'
+        primaryColor: '#2563eb',
+        title: 'Chat with us',
+        subtitle: "We're here to help!",
+        greeting: 'Hello! How can I help you today?',
+        showBranding: true
+    });
+    
+    // You can also control the widget programmatically
+    // widget.toggleChat(); // Open/close the chat
+    // widget.sendMessage('Hello!'); // Send a message
+&lt;/script&gt;</code></pre>
+                </div>
+            </div>
+            
+            <div>
+                <h2>Options</h2>
+                <div class="example">
+                    <ul>
+                        <li><strong>agentId</strong> (required): Your unique agent ID</li>
+                        <li><strong>position</strong>: Widget position (bottom-right, top-right, bottom-left, top-left)</li>
+                        <li><strong>primaryColor</strong>: Primary color for the widget (hex, rgb, or color name)</li>
+                        <li><strong>title</strong>: Title shown in the chat header</li>
+                        <li><strong>subtitle</strong>: Subtitle shown in the chat header</li>
+                        <li><strong>greeting</strong>: Initial greeting message</li>
+                        <li><strong>showBranding</strong>: Whether to show "Powered by" branding</li>
+                    </ul>
+                </div>
+                
+                <h2>Methods</h2>
+                <div class="example">
+                    <ul>
+                        <li><code>toggleChat(show)</code>: Show or hide the chat</li>
+                        <li><code>sendMessage(message)</code>: Send a message programmatically</li>
+                        <li><code>addMessage({ content, isUser })</code>: Add a message to the chat</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© 2025 Your Company. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Demo widget (remove in production) -->
+    <script src="widget.js"></script>
+    <script>
+        // Demo initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            // This is just for the demo page
+            if (window.location.hostname === 'your-domain.com') {
+                new SupportWidget({
+                    agentId: 'demo',
+                    position: 'bottom-right',
+                    primaryColor: '#2563eb',
+                    title: 'Live Demo',
+                    subtitle: 'Try it out!',
+                    greeting: 'Hello! This is a demo of our embeddable chat widget. How can I help you today?',
+                    showBranding: true
+                });
+            }
+        });
+    </script>
+</body>
+</html>
