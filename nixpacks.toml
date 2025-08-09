@@ -11,8 +11,8 @@ cmds = [
 
 [phases.build]
 cmds = [
-    "cd /app/backend",
-    "/app/venv/bin/python manage.py collectstatic --noinput"
+    # Skip collectstatic as we're using DISABLE_COLLECTSTATIC
+    "echo 'Skipping collectstatic due to DISABLE_COLLECTSTATIC=1'"
 ]
 
 [start]
